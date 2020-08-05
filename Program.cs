@@ -11,14 +11,25 @@ namespace Dotnet_2
     {
         static void Main(string[] args)
         {
-            Calendar(Months.June);
-            Calendar(Months.August);
+            switch (args.Length){
+            case 0:
+                Calendar();
+                break;
+            case 1:
+                Calendar((Months) Enum.Parse(typeof(Months), args[0], true));
+                break;
+            case 2:
+            default:
+                Calendar((Months) Enum.Parse(typeof(Months), args[0], true), (int) Int32.Parse(args[1]));
+                break;
+            }
         }
-        public static void Calendar(Months month = (Months) 0, int year = -1)
+        public static void Calendar(Months month = Months.Empty, int year = -1)
         {
             DateTime[] holidays = { new DateTime(2020, 8, 5), new DateTime(2020, 8, 24)};
             DateTime currentDay = new DateTime((int) DateTime.Now.Year, (int) DateTime.Now.Month, (int) DateTime.Now.Day);
             DateTime day1;
+
             if (year == -1){
                 year = DateTime.Now.Year;
             }
@@ -26,15 +37,16 @@ namespace Dotnet_2
                 month = (Months) DateTime.Now.Month;
             } 
             day1 = new DateTime((int) year, (int) month, (int) 1);
-            uint count = 0, k = 0;
+            uint k = 0;
 
+            Console.WriteLine("{0} {1}", month, year);
             Console.WriteLine("Mo Tu We Th Fr \x1b[31mSa\x1b[0m \x1b[31mSu\x1b[0m");
             for (int i = 0; i < (int) day1.DayOfWeek - 1; i++){
                 Console.Write("   ");
             }
             for (int i = 1; i <= DateTime.DaysInMonth(currentDay.Year, currentDay.Month); i++){
                 if (day1.CompareTo(currentDay) == 0){
-                    Console.Write("\x1b[34m{0:d2}\x1b[0m ", i);
+                    Console.Write("\x1b[33m{0:d2}\x1b[0m ", i);
                 } else {
                     switch((int) day1.DayOfWeek){
                     case 0:
@@ -55,7 +67,7 @@ namespace Dotnet_2
                             Console.Write("\x1b[31m{0:d2}\x1b[0m ", i);
                             k = 0;
                         } else {
-                            Console.Write("\x1b[37m{0:d2}\x1b[0m ", i);
+                            Console.Write("{0:d2} ", i);
                         }
                         break;
                     case 6:
